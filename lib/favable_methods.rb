@@ -11,22 +11,19 @@ module Acts #:nodoc:
       def acts_as_favable(options={})
         has_many :favorites, {:as => :favable, :dependent => :destroy}.merge(options)
         include Acts::Favable::InstanceMethods
-        extend Acts::Favable::SingletonMethods
       end
-    end
-    
-    module SingletonMethods
-      def find_favorites_for(obj)
+      
+      def self.find_favorites_for(obj)
         favable = self.base_class.name
         Favorite.find_favorites_for_favable(favable, obj.id)
       end
       
-      def find_favorites_by_user(user) 
+      def self.find_favorites_by_user(user) 
         favable = self.base_class.name
         Favorite.where(["user_id = ? and favable_type = ?", user.id, favable]).order("created_at DESC")
       end
     end
-    
+     
     # This module contains instance methods
     module InstanceMethods
       def favorites_ordered_by_submitted
