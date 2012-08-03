@@ -17,12 +17,12 @@ module Acts #:nodoc:
     
     module SingletonMethods
       def find_favorites_for(obj)
-        favable = ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s
+        favable = self.base_class.name
         Favorite.find_favorites_for_favable(favable, obj.id)
       end
       
       def find_favorites_by_user(user) 
-        favable = ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s
+        favable = self.base_class.name
         Favorite.where(["user_id = ? and favable_type = ?", user.id, favable]).order("created_at DESC")
       end
     end
